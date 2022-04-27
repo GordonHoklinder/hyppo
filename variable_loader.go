@@ -49,9 +49,13 @@ func load_variables(path string) ([]variable, error) {
 				if err != nil {
 					return result, err;
 				}
-				upper_boundary, err = strconv.ParseFloat(line[3] , 64)
-				if err != nil {
-					return result, err;
+				if len(line) > 3 {
+					upper_boundary, err = strconv.ParseFloat(line[3] , 64)
+					if err != nil {
+						return result, err;
+					}
+				} else {
+					upper_boundary = lower_boundary
 				}
 				if len(line) > 4 {
 					splits, err = strconv.Atoi(line[4])

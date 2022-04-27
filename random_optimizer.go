@@ -21,7 +21,7 @@ func (this random_optimizer) find_optimal_hyperparameters(variables []variable) 
 			} else if variables[i].format == int_format {
 				lower := int(variables[i].lower_boundary)
 				upper := int(variables[i].upper_boundary)
-				variable_values[i] = strconv.Itoa(rand.Intn(upper - lower + 1) + lower)
+				variable_values[i] = strconv.Itoa(rand.Intn(upper - lower) + lower)
 			} else {
 				lower := variables[i].lower_boundary
 				upper := variables[i].upper_boundary

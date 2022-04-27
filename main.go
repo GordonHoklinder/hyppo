@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"fmt"
 )
 
 func main() {
@@ -28,9 +29,10 @@ func main() {
 	case "random":
 		used_optimizer = random_optimizer{script_communicator, runs}
 	case "grid":
-		used_optimizer = grid_optimizer{script_communicator}
+		used_optimizer = grid_optimizer{script_communicator, runs}
 	default:
 		log.Fatalf("%s is not a supported optimizer.\n", optimizer_name)
 	}
 	used_optimizer.find_optimal_hyperparameters(variables)
+	fmt.Printf("Score:\n%f\n", script_communicator.best_score())
 }
