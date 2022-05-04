@@ -82,11 +82,6 @@ func (this genetic_optimizer) get_hybrid (mother individual, father individual, 
 	return mutant
 }
 
-func (this genetic_optimizer) evaluate_individual (unevaluated evaluated_individual, variables []variable) evaluated_individual {
-	unevaluated.score, _ = this.script_communicator.run_arguments(variables, unevaluated.data.to_string_slice(variables))
-	return unevaluated
-}
-
 
 func (this genetic_optimizer) get_initial_population (variables []variable) []evaluated_individual {
 	output := make([]evaluated_individual, 0)
@@ -101,7 +96,7 @@ func (this genetic_optimizer) find_optimal_hyperparameters (variables []variable
 	population := this.get_initial_population(variables)
 	population_size := len(population)
 	for i := 0; i < population_size; i++ {
-		population[i] = this.evaluate_individual(population[i], variables)
+			population[i] = population[i].evaluate_individual(variables, this.script_communicator)
 	}
 	iterations := this.get_iterations()
 	for i := 0; i < iterations; i++ {
@@ -115,7 +110,7 @@ func (this genetic_optimizer) find_optimal_hyperparameters (variables []variable
 			}
 		}
 		for j := population_size; j < len(population); j++ {
-			population[j] = this.evaluate_individual(population[j], variables)
+			population[j] = population[j].evaluate_individual(variables, this.script_communicator)
 		}
 		population = this.kill_unfit(population)
 	}

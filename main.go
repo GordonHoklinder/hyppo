@@ -39,6 +39,8 @@ func main() {
 		used_optimizer = iterated_grid_optimizer{script_communicator, runs, iterations}
 	case "genetic":
 		used_optimizer = genetic_optimizer{script_communicator, runs, magic, mutants, hybrids, iterations}
+	case "coordinate":
+		used_optimizer = coordinate_optimizer{script_communicator, runs}
 	default:
 		log.Fatalf("%s is not a supported optimizer.\n", optimizer_name)
 	}

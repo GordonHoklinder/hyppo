@@ -26,52 +26,10 @@ type grid_optimizer struct {
 	runs int
 }
 
-func step_size(vari variable, splits int) float64 {
-	return (vari.upper_boundary - vari.lower_boundary) / float64(splits - 1)
-}
 
 func grid_iteration(variables []variable, script_communicator communicator, runs int, splits_cap int) []variable {
-	possibilities := make([]int, len(variables))
-	possibilities[0] = 1
-	for i := 1; i < len(variables); i++ {
-		if possibilities[i - 1] == 0 || variables[i].format == float_format {
-			possibilities[i] = 0
-		} else if variables[i].format == int_format {
-			max_splits := int(variables[i].upper_boundary - variables[i].lower_boundary + 1)
-			if variables[i].splits != 0 {
-				max_splits = min(max_splits, variables[i].splits)
-			}
-			possibilities[i] = possibilities[i-1] * max_splits
-		} else {
-			possibilities[i] = possibilities[i-1] * len(variables[i].options)
-		}
-	}
-	
-	runs_left := runs
-	splits := make([]int, len(variables))
-	for i := len(variables) - 1; i >= 0; i-- {
-		max_splits := int(variables[i].upper_boundary - variables[i].lower_boundary + 1)
-		if variables[i].format == string_format {
-			splits[i] = len(variables[i].options)
-		} else if variables[i].splits != 0 {
-			splits[i] = min(variables[i].splits, max_splits)
-		} else if variables[i].lower_boundary == variables[i].upper_boundary {
-			splits[i] = 1
-		} else {
-			splits[i] = max(int(math.Pow(float64(runs_left), 1.0 / float64(i + 1))), 2)
-			if possibilities[i] != 0 {
-				splits[i] = max(splits[i], runs_left / possibilities[i])
-			}
-			if splits_cap != 0 && variables[i].splits == 0 {
-				splits[i] = min(splits[i], splits_cap)
-			}
-			if variables[i].format == int_format {
-				splits[i] = min(splits[i], max_splits)
-			}
-		}
-		runs_left /= splits[i];
-	}
-
+	possibilities := compute_prefix(possible_values(variables), product, 1)
+	splits := find_splits(variables, possibilities, runs, splits_cap, runs_divide)
 	configurations_ran := make([]int, len(variables))
 	changed_index := len(variables) - 1
 	var best_variables []string
@@ -90,7 +48,6 @@ func grid_iteration(variables []variable, script_communicator communicator, runs
 				} else {
 					variables_used[i] = strconv.FormatFloat(value, 'f', 12, 64) 
 				}
-
 			}
 		}
 		score, _ := script_communicator.run_arguments(variables, variables_used)
@@ -133,7 +90,6 @@ func grid_iteration(variables []variable, script_communicator communicator, runs
 				}
 			}
 		}
-
 	}
 
 	return new_variables
