@@ -13,8 +13,9 @@ import (
 )
 
 type communicator struct {
-	script_path string
-	language string
+	script string
+	arguments string
+	log_path string
 	pass_names bool
 }
 
@@ -23,19 +24,23 @@ type line_with_score struct {
 	line string
 }
 
-func (this communicator) log_path () string {
-	return this.script_path + ".hyppo-log"
+func (this communicator) get_log_path () string {
+	if this.log_path == "" {
+		return this.script + ".hyppo-log"
+	} else {
+		return this.log_path
+	}
 }
 
 func (this communicator) log_score (score float64, flags string) {
-	file, _ := os.OpenFile(this.log_path(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) 
+	file, _ := os.OpenFile(this.get_log_path(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) 
 	defer file.Close()
 	line := fmt.Sprintf("Score: %f Flags: %s\n", score, flags)
 	file.WriteString(line)
 }
 
 func (this communicator) read_log() []line_with_score {
-	file, _ := os.OpenFile(this.log_path(), os.O_RDWR, 0755)
+	file, _ := os.OpenFile(this.get_log_path(), os.O_RDWR, 0755)
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	lines := make([]line_with_score, 0)
@@ -52,7 +57,7 @@ func (this communicator) sort_log () {
 	sort.Slice(lines, func(i, j int) bool {
     return lines[i].score > lines[j].score
 	})
-	file, _ := os.OpenFile(this.log_path(), os.O_RDWR, 0755)
+	file, _ := os.OpenFile(this.get_log_path(), os.O_RDWR, 0755)
 	file.Truncate(0)
 	file.Seek(0, 0)
 	for _, line := range lines {
@@ -73,14 +78,6 @@ func (this communicator) format_parameter(argument variable, value string) strin
 	}
 }
 
-func (this communicator) format_command() string {
-	if this.language == "" {
-		return this.script_path
-	} else {
-		return fmt.Sprintf("%s %s", this.language, this.script_path)
-	}
-}
-
 func (this communicator) format_flags(arguments []variable, arguments_values []string) string {
 	flags := ""
 	for i := 0; i < len(arguments); i++ {
@@ -91,9 +88,14 @@ func (this communicator) format_flags(arguments []variable, arguments_values []s
 
 func (this communicator) run_arguments (arguments []variable, arguments_values []string) (float64, int64) {
 	flags := this.format_flags(arguments, arguments_values)
-	command := this.format_command()
 	execution_start := time.Now()
-	out, execution_error := exec.Command(command, flags).Output()
+	var command *exec.Cmd
+	if this.arguments != "" {
+		command = exec.Command(this.script, this.arguments, flags)
+	} else {
+		command = exec.Command(this.script, flags)
+	}
+	out, execution_error := command.Output()
 	execution_time := time.Since(execution_start)
   if execution_error != nil {
   	log.Fatal(execution_error)
