@@ -85,6 +85,16 @@ TODO
 
 TODO
 
+#### Simulated Annealing
+`--optimizer=annealing`
+
+Simulated annealing recognizes the following flags:
+
+- `runs`: There are in total `runs` runs.
+- `temperature`: The initial temperature. Default `1.0`.
+- `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
+
+TODO
 
 ### Examples
 

@@ -9,7 +9,7 @@ import (
 func main() {
 	var script, optimizer_name, variables_path, logs_path, arguments string
 	var runs, iterations, mutants, hybrids int
-	var magic float64
+	var magic, temperature float64
 	var pass_variable_names bool
 	flag.StringVar(&script, "script", "./main", "Path to the script whose hyperparameters are optimized or to the interpreter.")
 	flag.StringVar(&arguments, "arguments", "", "The arguements passed to the scrept before the hyperparameters. Usually used for passing script path to the interpreter.")
@@ -21,6 +21,7 @@ func main() {
 	flag.IntVar(&mutants, "mutants", 7, "The number of mutants used in each iteration.")
 	flag.IntVar(&hybrids, "hybrids", 3, "The number of hybrids used in each iteration.")
 	flag.Float64Var(&magic, "magic", 0.3, "A magical constant.")
+	flag.Float64Var(&temperature, "temperature", 1.0, "The temperature.")
 	flag.BoolVar(&pass_variable_names, "pass_names", true, "Whether the variables to the script are passed with names.")
 	flag.Parse();
 	
@@ -42,6 +43,8 @@ func main() {
 		used_optimizer = genetic_optimizer{script_communicator, runs, magic, mutants, hybrids, iterations}
 	case "coordinate":
 		used_optimizer = coordinate_optimizer{script_communicator, runs}
+	case "annealing":
+		used_optimizer = annealing_optimizer{script_communicator, runs, temperature, magic}
 	default:
 		log.Fatalf("%s is not a supported optimizer.\n", optimizer_name)
 	}

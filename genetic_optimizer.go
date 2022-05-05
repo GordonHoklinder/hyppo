@@ -16,6 +16,10 @@ type genetic_optimizer struct {
 	iterations int
 }
 
+type genetic_basis struct {
+	mutation_deviation_coefficient float64
+}
+
 
 func (this genetic_optimizer) get_iterations () int {
 	if this.iterations == 0 {
@@ -36,29 +40,29 @@ func (this genetic_optimizer) kill_unfit (population []evaluated_individual) []e
 	return population[:this.get_population_size()]
 }
 
-func (this genetic_optimizer) mutate_string (mutant individual, index int, variables []variable) individual {
+func (this genetic_basis) mutate_string (mutant individual, index int, variables []variable) individual {
 	mutant[index] = property_from_string(variables[index].options[rand.Intn(len(variables[index].options))])
 	return mutant
 }
 
-func (this genetic_optimizer) get_mutated_value (original_value float64, index int, variables []variable) float64 {
+func (this genetic_basis) get_mutated_value (original_value float64, index int, variables []variable) float64 {
 	output := original_value + rand.NormFloat64() * (variables[index].upper_boundary - variables[index].lower_boundary) * this.mutation_deviation_coefficient
 	output = math.Min(output, variables[index].upper_boundary)
 	output = math.Max(output, variables[index].lower_boundary)
 	return output
 } 
 
-func (this genetic_optimizer) mutate_float (mutant individual, index int, variables []variable) individual {
+func (this genetic_basis) mutate_float (mutant individual, index int, variables []variable) individual {
 	mutant[index] = property_from_float(this.get_mutated_value(mutant[index].as_float, index, variables))
 	return mutant
 }
 
-func (this genetic_optimizer) mutate_int (mutant individual, index int, variables []variable) individual {
+func (this genetic_basis) mutate_int (mutant individual, index int, variables []variable) individual {
 	mutant[index] = property_from_int(int(this.get_mutated_value(float64(mutant[index].as_int), index, variables)))
 	return mutant
 }
 
-func (this genetic_optimizer) get_mutant(parent individual, variables []variable) individual {
+func (this genetic_basis) get_mutant(parent individual, variables []variable) individual {
 	mutant := make(individual, len(parent))
 	copy(mutant, parent)
 	index := rand.Intn(len(parent))
@@ -99,10 +103,11 @@ func (this genetic_optimizer) find_optimal_hyperparameters (variables []variable
 			population[i] = population[i].evaluate_individual(variables, this.script_communicator)
 	}
 	iterations := this.get_iterations()
+	basis := genetic_basis{this.mutation_deviation_coefficient}
 	for i := 0; i < iterations; i++ {
 		for j := 0; j < population_size; j++ {
 			for k := 0; k < this.mutants; k++ {
-				population = append(population, evaluated_individual{0.0, this.get_mutant(population[j].data, variables)})
+				population = append(population, evaluated_individual{0.0, basis.get_mutant(population[j].data, variables)})
 			}
 			for k := 0; k < this.hybrids; k++ {
 				second := rand.Intn(population_size)
