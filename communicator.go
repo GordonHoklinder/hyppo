@@ -10,7 +10,10 @@ import (
 	"time"
 	"bufio"
 	"sort"
+	"math"
 )
+
+var current_best_score float64
 
 type communicator struct {
 	script string
@@ -19,28 +22,36 @@ type communicator struct {
 	pass_names bool
 }
 
+
+func new_communicator (script string, arguments string, log_path string, pass_names bool) communicator {
+	log_path = get_log_path(log_path, script)
+	current_best_score = math.Inf(-1)
+	return communicator{script, arguments, log_path, pass_names}
+}
+
+func get_log_path (log_path, script string) string {
+	if log_path == "" {
+		return script + ".hyppo-log"
+	} else {
+		return log_path
+	}
+}
+
 type line_with_score struct {
 	score float64
 	line string
 }
 
-func (this communicator) get_log_path () string {
-	if this.log_path == "" {
-		return this.script + ".hyppo-log"
-	} else {
-		return this.log_path
-	}
-}
 
 func (this communicator) log_score (score float64, flags string) {
-	file, _ := os.OpenFile(this.get_log_path(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) 
+	file, _ := os.OpenFile(this.log_path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) 
 	defer file.Close()
 	line := fmt.Sprintf("Score: %f Flags: %s\n", score, flags)
 	file.WriteString(line)
 }
 
 func (this communicator) read_log() []line_with_score {
-	file, _ := os.OpenFile(this.get_log_path(), os.O_RDWR, 0755)
+	file, _ := os.OpenFile(this.log_path, os.O_RDWR, 0755)
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	lines := make([]line_with_score, 0)
@@ -57,7 +68,7 @@ func (this communicator) sort_log () {
 	sort.Slice(lines, func(i, j int) bool {
     return lines[i].score > lines[j].score
 	})
-	file, _ := os.OpenFile(this.get_log_path(), os.O_RDWR, 0755)
+	file, _ := os.OpenFile(this.log_path, os.O_RDWR, 0755)
 	file.Truncate(0)
 	file.Seek(0, 0)
 	for _, line := range lines {
@@ -65,7 +76,7 @@ func (this communicator) sort_log () {
 	}
 }
 
-func (this communicator) best_score () float64 {
+func (this communicator) global_best_score () float64 {
 	this.sort_log()
 	return this.read_log()[0].score
 }
@@ -106,5 +117,6 @@ func (this communicator) run_arguments (arguments []variable, arguments_values [
   	log.Fatal(parse_error)
   }
 	this.log_score(score, flags)
+	current_best_score = math.Max(score, current_best_score)
 	return score, int64(execution_time)
 }

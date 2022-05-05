@@ -30,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	script_communicator := communicator{script, arguments, logs_path, pass_variable_names}
+	script_communicator := new_communicator(script, arguments, logs_path, pass_variable_names)
 	var used_optimizer optimizer
 	switch optimizer_name {
 	case "random":
@@ -49,5 +49,6 @@ func main() {
 		log.Fatalf("%s is not a supported optimizer.\n", optimizer_name)
 	}
 	used_optimizer.find_optimal_hyperparameters(variables)
-	fmt.Printf("Score:\n%f\n", script_communicator.best_score())
+	fmt.Printf("Global best score:\n%f\n", script_communicator.global_best_score())
+	fmt.Printf("Current best score:\n%f\n", current_best_score)
 }

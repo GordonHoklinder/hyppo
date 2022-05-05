@@ -32,7 +32,7 @@ Its format is described in the subsection below.
 
 When this initial setting is done, the script can be run as `hyppo --script=./heuristic_algorithm --optimizer=genetic --runs=100`. There are other flags which can be used. Meaning of all of them is described below.
 
-The program prints the best score achieved during the computation. Notice that the score is printed on a separate line so that the hyppo parameters for a given problem can be optimized as well.
+The program prints the best score on the particular script so far and the best score achieved during this execution. Notice that the score is printed on a separate line so that the hyppo parameters for a given problem can be optimized using hyppo as well.
 
 It writes all the parameters which were tried and the resulting score for each into a log file. The default path is `*name of the script*.hyppo-log`. This is done so even if hyppo is terminated in a middle of a run.
 
