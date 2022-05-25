@@ -14,7 +14,7 @@ func main() {
 	flag.StringVar(&script, "script", "./main", "Path to the script whose hyperparameters are optimized or to the interpreter.")
 	flag.StringVar(&arguments, "arguments", "", "The arguements passed to the scrept before the hyperparameters. Usually used for passing script path to the interpreter.")
 	flag.StringVar(&optimizer_name, "optimizer", "random", "The type of optimizer used.")
-	flag.StringVar(&variables_path, "variables", "variables.tsv", "The path to file with variables.")
+	flag.StringVar(&variables_path, "variables", "variables.tsv", "The path to the file with variables.")
 	flag.StringVar(&logs_path, "logs", "", "The path to file with logs.")
 	flag.IntVar(&runs, "runs", 1000, "The approximate number of times the optimizer runs the program.")
 	flag.IntVar(&iterations, "iterations", 0, "The number of iterations the program does.")

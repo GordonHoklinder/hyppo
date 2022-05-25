@@ -1,0 +1,21 @@
+[
+  {
+    "name": "optimizer",
+    "format": "string",
+    "options": ["Adam", "SGD"],
+    "default": "Adam"
+  },
+  {
+    "name": "learning_rate",
+    "format": "float",
+    "lower": 0.001,
+    "upper": 1.0
+  },
+  {
+    "name": "epochs",
+    "format": "int",
+    "lower": 10,
+    "upper": 1000,
+    "splits": 10
+  }
+]

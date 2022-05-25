@@ -44,7 +44,7 @@ Hyppo recogizes the following flags.
 - `arguments`: Arguments to the script which are passed before the arguments from optimizer. A possible usage is when using interpreter to enter the path to the program (e.g. `--script=python3 --arguments=main.py`). By default is empty.
 - `optimizer`: The type of optimizer used. They are described below. The default value is TODO.
 - `runs`: The number of times the script should be run. Note that for some of the optimizers, this is only approximate.
-- `variables`: The path to the file with hyperparameter names and their ranges. Default is `./variables.TODO`.
+- `variables`: The path to the file with hyperparameter names and their ranges. Default is `./variables.yaml`.
 - `logs`: The path to file with logs. By default hyppo logs into a file `*script*.hyppo-log`, where `*script*` is the value passed to the script flag. If the file already exists, hyppo appends to it.
 - `pass_names`: If true, the hyperparameters are passed to the script with their names (e.g. `./script --a=42 --b=37`), otherwise only the values are passed (e.g. `./script 42 37`).
 
@@ -52,7 +52,21 @@ There are other flags which are specific only for some optimizers. These are dis
 
 ### Format of variables file
 
-TODO
+The variables passed to the script are provided to hyppo via .yaml file passed as a flag `variables`.
+
+The content of the file should be a list of dictionaries, each discribing one variable. The order in which they appear in the list is the same as the order in which they are passed to the underlaying script.
+
+Each variable should contain the following:
+
+- `name` (mandatory): The name of the variable.
+- `format` (mandatory): The format of the variable - either `string`, `float` or `int`.
+- `default` (optional): The default value for some optimizers. Should correspond to the format of variable.
+- `options` (only for string variables, mandatory): A list of options.
+- `lower` (only for nonstring variables, mandatory): The lower boundary of the interval from which the values are taken.
+- `upper` (only for nonstring variables, optional): The upper boundary of the interval from which the values are taken. If not provided, the value of `lower` is taken.
+- `splits` (only for nonstring variables, optional): For some optimizers, the number of splits in the given variable.
+
+To get a better idea see the file `variables.yaml`.
 
 ### Optimizers
 
