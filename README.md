@@ -25,7 +25,7 @@ Dev loss after epoch 10 is 0.8502
 ```
 
 If you wanted to minimize the dev loss instead of maximizing accuracy,
-the lass line would contain `-0.8502` (the minus sign is there because of maximization).
+the lass line would contain `-0.8502` (the minus sign is there because hyppo only maximizes).
 
 Second, **a file with hyperparameters and their ranges needs to be created.**
 Its format is described in the subsection below.
@@ -71,6 +71,8 @@ To get a better idea see the file `variables.yaml`.
 ### Optimizers
 
 The following optimizers are available.
+For a better idea how the optimizers are implemented, see the `DOCUMENTATION.md`.
+If you would like to know the performance of the given algoritmhs, `COMPARISON.md` might be helpful - it contains the comparison of the optimizers on a concrete task.
 
 #### Random Search
 `--optimizer=random`
@@ -82,22 +84,30 @@ Note that the probability distribution in int and float variables is uniform. Th
 #### Grid Search
 `--optimizer=grid`
 
-TODO
+Grid search recognizes only the flag `runs`. The number of call to the underlaying script should be close to this value, but are in general different.
+
+If you want to have a better control over the number of splits in each variable, provide the argument `splits` for float/int variables in the .yaml config file. Note that for string variables all possibilities are always tried.
 
 #### Iterative Grid Search
 `--optimizer=iterative`
 
-TODO
+Similarly to grid search the `runs` flag determines the approximate number of calls to the script.
+
+The number of iterations grid search does is computed automatically, it could be forced to a given value by passing the flag `iterations`. As in grid search one can use the `splits` atribute for a given variable to control the number of splits in each iteration.
 
 #### Coordinate Search
 `--optimizer=coordinate`
 
-TODO
+As in the previous two algorithms, one can use `runs` flag to determine approximate number of runs and provide `splits` attributes in each variable.
+
+TODO: By default coordinate search starts with a random value for each variable. You can override this by passing a `default` in variable specification.
 
 #### Genetic Algorithm
 `--optimizer=genetic`
 
-TODO
+The number of iterations for this optimizer can be either specified as `iterations` or is computed roughly as a square root of the `runs`. The number of new hybrids and mutants in each generation can be passed as `hybrids` or `mutants` respectively. The size of the population is computed as runs / ((hybrids + mutants + 1) * iterations).
+
+Last parameter is `magic`. It determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
 #### Simulated Annealing
 `--optimizer=annealing`
@@ -108,12 +118,11 @@ Simulated annealing recognizes the following flags:
 - `temperature`: The initial temperature. Default `1.0`.
 - `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
-TODO
-
 ### Examples
 
 TODO
 
 ## Credits
+
 
 TODO
