@@ -113,7 +113,7 @@ The number of iterations grid search does is computed automatically, it could be
 
 As in the previous two algorithms, one can use `runs` flag to determine approximate number of runs and provide `splits` attributes in each variable.
 
-TODO: By default coordinate search starts with a random value for each variable. You can override this by passing a `default` in variable specification.
+By default coordinate search starts with a random value for each variable. You can override this by passing a `default` in variable specification.
 
 #### Genetic Algorithm
 `--optimizer=genetic`
@@ -131,7 +131,7 @@ Simulated annealing recognizes the following flags:
 - `temperature`: The initial temperature. Default `1.0`.
 - `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
-TODO: By default simulated annealing starts with a random value for each variable. You can override this by passing a `default` in variable specification.
+By default simulated annealing starts with a random value for each variable. You can override this by passing a `default` in variable specification.
 
 ### Examples
 

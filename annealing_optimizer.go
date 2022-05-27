@@ -24,7 +24,7 @@ func (this annealing_optimizer) accepted (old_score float64, new_score float64, 
 
 func (this annealing_optimizer) find_optimal_hyperparameters(variables []variable) {
 	rand.Seed(time.Now().UnixNano())
-	current := get_random_individual(variables)
+	current := get_default_individual(variables)
 	current = current.evaluate_individual(variables, this.script_communicator)
 	basis := genetic_basis{this.mutation_deviation_coefficient}
 	for i := 1; i < this.runs; i++ {
