@@ -13,7 +13,7 @@ git clone https://github.com/GordonHoklinder/hyppo
 ```
 
 ```
-cd hyppo; go build
+cd hyppo/src/; go build
 ```
 
 To allow for running `hyppo` from any folder:
