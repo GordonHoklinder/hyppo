@@ -6,7 +6,20 @@ Hyppo is intended to serve as a lightweight, command-line optimizer of various p
 
 ### Instalation
 
-TODO
+To install hyppo on your computer, you need to have `git` and `go` installed. Then run the following commands:
+
+```
+git clone https://github.com/GordonHoklinder/hyppo
+```
+
+```
+cd hyppo; go build
+```
+
+To allow for running `hyppo` from any folder:
+```
+sudo ln -sr hyppo /bin/
+```
 
 ### Typical usage
 
@@ -118,11 +131,18 @@ Simulated annealing recognizes the following flags:
 - `temperature`: The initial temperature. Default `1.0`.
 - `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
+TODO: By default simulated annealing starts with a random value for each variable. You can override this by passing a `default` in variable specification.
+
 ### Examples
 
 TODO
 
 ## Credits
 
+This project was created as a seminary project for the course Programming 2 in the Bachelor's programme Computer Science at Charles University.
 
-TODO
+You can learn more about the structure of the project in the programmer's documentation.
+
+The code in this repository can be used as described in LICENSE.
+
+If you've found any issues or there are any features missing, do not hasitate to raise an issue or create a pull request.
