@@ -79,7 +79,6 @@ func load_variables(path string) ([]variable, error) {
 		 return result, err
 	}
 	
-	// TODO loading yaml
 	for _, current_variable := range data {
 		name := current_variable["name"].(string)
 		format := current_variable["format"].(string)
