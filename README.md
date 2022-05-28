@@ -137,7 +137,7 @@ By default simulated annealing starts with a random value for each variable. You
 
 This project was created as a seminary project for the course Programming 2 in the Bachelor's programme Computer Science at Charles University.
 
-You can learn more about the structure of the project in the programmer's documentation.
+You can learn more about the structure of the project and the used algorithms in `DOCUMENTATION.md`. In `COMPARISON.md` you can see a non-formal comparison of the optimizers.
 
 The code in this repository can be used as described in LICENSE.
 
