@@ -55,7 +55,7 @@ Hyppo recogizes the following flags.
 
 - `script`: The path to the script whose hyperparameters are optimized. If the script needs to be run via interpreter, here should be the name of the interpreter (e.g. `--script=python3`).
 - `arguments`: Arguments to the script which are passed before the arguments from optimizer. A possible usage is when using interpreter to enter the path to the program (e.g. `--script=python3 --arguments=main.py`). By default is empty.
-- `optimizer`: The type of optimizer used. They are described below. The default value is TODO.
+- `optimizer`: The type of optimizer used. They are described below. The default value is `genetic`.
 - `runs`: The number of times the script should be run. Note that for some of the optimizers, this is only approximate.
 - `variables`: The path to the file with hyperparameter names and their ranges. Default is `./variables.yaml`.
 - `logs`: The path to file with logs. By default hyppo logs into a file `*script*.hyppo-log`, where `*script*` is the value passed to the script flag. If the file already exists, hyppo appends to it.
@@ -132,10 +132,6 @@ Simulated annealing recognizes the following flags:
 - `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
 By default simulated annealing starts with a random value for each variable. You can override this by passing a `default` in variable specification.
-
-### Examples
-
-TODO
 
 ## Credits
 
