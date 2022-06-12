@@ -6,7 +6,9 @@ Hyppo is intended to serve as a lightweight, command-line optimizer of various p
 
 ### Instalation
 
-To install hyppo on your computer, you need to have `git` and `go` installed. Then run the following commands:
+To install hyppo on your computer, you need to have `git` and `go` installed 
+([Go instalation link](https://go.dev/doc/install)). 
+Then run the following commands:
 
 ```
 git clone https://github.com/GordonHoklinder/hyppo
@@ -54,11 +56,15 @@ It writes all the parameters which were tried and the resulting score for each i
 Hyppo recogizes the following flags.
 
 - `script`: The path to the script whose hyperparameters are optimized. If the script needs to be run via interpreter, here should be the name of the interpreter (e.g. `--script=python3`).
+Please note that you *cannot* use the tilde expansion or other bash idioms in paths.
+However, relative or absolute paths are fine.
 - `arguments`: Arguments to the script which are passed before the arguments from optimizer. A possible usage is when using interpreter to enter the path to the program (e.g. `--script=python3 --arguments=main.py`). By default is empty.
 - `optimizer`: The type of optimizer used. They are described below. The default value is `genetic`.
 - `runs`: The number of times the script should be run. Note that for some of the optimizers, this is only approximate.
 - `variables`: The path to the file with hyperparameter names and their ranges. Default is `./variables.yaml`.
 - `logs`: The path to file with logs. By default hyppo logs into a file `*script*.hyppo-log`, where `*script*` is the value passed to the script flag. If the file already exists, hyppo appends to it.
+Do not forget that when using interpreter logs are by default saved to that interpreter directory.
+In such a case you might want to set this flag.
 - `pass_names`: If true, the hyperparameters are passed to the script with their names (e.g. `./script --a=42 --b=37`), otherwise only the values are passed (e.g. `./script 42 37`).
 
 There are other flags which are specific only for some optimizers. These are discussed in the subsection *Optimizers*.
