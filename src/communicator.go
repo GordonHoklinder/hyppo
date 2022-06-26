@@ -89,10 +89,10 @@ func (this communicator) format_parameter(argument variable, value string) strin
 	}
 }
 
-func (this communicator) format_flags(arguments []variable, arguments_values []string) string {
-	flags := ""
+func (this communicator) format_flags(arguments []variable, arguments_values []string) []string {
+	flags := make([]string, 0)
 	for i := 0; i < len(arguments); i++ {
-		flags += " " + this.format_parameter(arguments[i], arguments_values[i])
+		flags = append(flags, this.format_parameter(arguments[i], arguments_values[i]))
 	}
 	return flags
 }
@@ -102,21 +102,20 @@ func (this communicator) run_arguments (arguments []variable, arguments_values [
 	execution_start := time.Now()
 	var command *exec.Cmd
 	if this.arguments != "" {
-		command = exec.Command(this.script, this.arguments, flags)
-	} else {
-		command = exec.Command(this.script, flags)
+		flags = append([]string{this.arguments}, flags...)
 	}
+	command = exec.Command(this.script, flags...)
 	out, execution_error := command.Output()
 	execution_time := time.Since(execution_start)
   if execution_error != nil {
-  	log.Fatal(execution_error)
+  	log.Fatal(out, execution_error)
   }
 	out_lines := strings.Split(strings.Trim(string(out), "\n"), "\n")
 	score, parse_error := strconv.ParseFloat(out_lines[len(out_lines) - 1], 64)
   if parse_error != nil {
   	log.Fatal(parse_error)
   }
-	this.log_score(score, flags)
+	this.log_score(score, strings.Join(flags, " "))
 	current_best_score = math.Max(score, current_best_score)
 	return score, int64(execution_time)
 }
