@@ -27,7 +27,7 @@ sudo ln -sr hyppo /bin/
 
 There are two things that need to be done before running hyppo on your script.
 
-First, **the last line of your program's output must contain a score only,** where the score is a metric which the optimizer tries to maximize.
+First, **the last line of your program's output must contain a score only,** where the score is a metric which the optimizer tries to maximize. Note that hyppo takes the last line of standard output and error output combined.
 
 For example, when training a neural network, the format of a correct output could look like this:
 
@@ -56,9 +56,12 @@ It writes all the parameters which were tried and the resulting score for each i
 Hyppo recogizes the following flags.
 
 - `script`: The path to the script whose hyperparameters are optimized. If the script needs to be run via interpreter, here should be the name of the interpreter (e.g. `--script=python3`).
-Please note that you *cannot* use the tilde expansion or other bash idioms in paths.
+- `arguments`: Arguments to the script which are passed before the arguments from optimizer.
+A possible usage is when using interpreter to enter the path to the program (e.g. `--script=python3 --arguments=main.py`).
+By default is empty.
+Please note that at this point all the arguments are passed as one to the underlying script.
+Also note that you *cannot* use the tilde expansion or other bash idioms in paths.
 However, relative or absolute paths are fine.
-- `arguments`: Arguments to the script which are passed before the arguments from optimizer. A possible usage is when using interpreter to enter the path to the program (e.g. `--script=python3 --arguments=main.py`). By default is empty.
 - `optimizer`: The type of optimizer used. They are described below. The default value is `genetic`.
 - `runs`: The number of times the script should be run. Note that for some of the optimizers, this is only approximate.
 - `variables`: The path to the file with hyperparameter names and their ranges. Default is `./variables.yaml`.
@@ -138,6 +141,27 @@ Simulated annealing recognizes the following flags:
 - `magic`: Determines the standard deviation of a change when mutating a non-string variable. The deviation is computed as `magic` times the range of the variable.
 
 By default simulated annealing starts with a random value for each variable. You can override this by passing a `default` in variable specification.
+
+### Examples
+
+The folder `examples` contatins examples of typical usage.
+
+The python script would typically be run as:
+
+```
+hyppo --script=python --arguments=python_example.py
+```
+
+Note that the parameters are passed with their names as `--pass_names` is by default true.
+
+The bash script would typically be run as:
+
+```
+hyppo --script=./bash_example.sh --pass_names=false
+```
+
+
+
 
 ## Credits
 

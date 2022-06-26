@@ -1,0 +1,14 @@
+[
+  {
+    "name": "y",
+    "format": "float",
+    "lower": -36.15,
+    "upper": 51.98
+  },
+  {
+    "name": "x",
+    "format": "int",
+    "lower": -15,
+    "upper": 2
+  }
+]

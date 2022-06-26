@@ -50,7 +50,7 @@ func grid_iteration(variables []variable, script_communicator communicator, runs
 				}
 			}
 		}
-		score, _ := script_communicator.run_arguments(variables, variables_used)
+		score := script_communicator.run_arguments(variables, variables_used)
 		if score > best_score {
 			best_score = score
 			best_variables = variables_used
