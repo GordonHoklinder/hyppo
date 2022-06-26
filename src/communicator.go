@@ -103,9 +103,9 @@ func (this communicator) run_arguments (arguments []variable, arguments_values [
 		flags = append([]string{this.arguments}, flags...)
 	}
 	command = exec.Command(this.script, flags...)
-	out, execution_error := command.Output()
+	out, execution_error := command.CombinedOutput()
   if execution_error != nil {
-  	log.Fatal(out, execution_error)
+		log.Fatal("Script failed with output:\n", string(out), execution_error)
   }
 	out_lines := strings.Split(strings.Trim(string(out), "\n"), "\n")
 	score, parse_error := strconv.ParseFloat(out_lines[len(out_lines) - 1], 64)
