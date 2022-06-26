@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"strings"
 	"strconv"
-	"time"
 	"bufio"
 	"sort"
 	"math"
@@ -97,16 +96,14 @@ func (this communicator) format_flags(arguments []variable, arguments_values []s
 	return flags
 }
 
-func (this communicator) run_arguments (arguments []variable, arguments_values []string) (float64, int64) {
+func (this communicator) run_arguments (arguments []variable, arguments_values []string) float64 {
 	flags := this.format_flags(arguments, arguments_values)
-	execution_start := time.Now()
 	var command *exec.Cmd
 	if this.arguments != "" {
 		flags = append([]string{this.arguments}, flags...)
 	}
 	command = exec.Command(this.script, flags...)
 	out, execution_error := command.Output()
-	execution_time := time.Since(execution_start)
   if execution_error != nil {
   	log.Fatal(out, execution_error)
   }
@@ -117,5 +114,5 @@ func (this communicator) run_arguments (arguments []variable, arguments_values [
   }
 	this.log_score(score, strings.Join(flags, " "))
 	current_best_score = math.Max(score, current_best_score)
-	return score, int64(execution_time)
+	return score
 }
