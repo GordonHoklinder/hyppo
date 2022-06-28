@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 	"os"
+	"math"
 )
 
 func communicator_for_log_testing(log_path string) communicator {
@@ -12,6 +13,11 @@ func communicator_for_log_testing(log_path string) communicator {
 func communicator_for_format_testing(pass_variables bool) communicator {
 	return communicator{"", "", "", pass_variables}
 }
+
+func communicator_for_script_testing(script string, pass_variables bool) communicator {
+	return communicator{script, "", "/dev/null", pass_variables}
+}
+
 
 func variable_for_testing(name string) variable {
 	return string_variable(name, []string{}, false, "")
@@ -93,4 +99,23 @@ func Test_format_parameter(t *testing.T) {
 	}
 }
 
+func Test_run_arguments(t *testing.T) {
+	variables := []variable{variable_for_testing("x"), variable_for_testing("y")}
+	values := []string{"5", "6"}
+	expected := float64(-5*5-6*6)
+	// Test short format
+	script_communicator := communicator_for_script_testing("../examples/bash_example.sh", false)
+	score := script_communicator.run_arguments(variables, values)
+	if math.Abs(expected - score) > 10e-7 {
+		t.Logf("Result of script should be %f but is %f", expected, score)
+		t.Fail()
+	}
+	// Test long format
+	script_communicator = communicator_for_script_testing("../examples/python_example.py", true)
+	score = script_communicator.run_arguments(variables, values)
+	if math.Abs(expected - score) > 10e-7 {
+		t.Logf("Result of script should be %f but is %f", expected, score)
+		t.Fail()
+	}
+}
 
