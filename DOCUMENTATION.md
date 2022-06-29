@@ -89,5 +89,13 @@ Provides the struct and functions for easy manipulation with the values of varia
 
 Provides additional miscellaneous functions which are used all over the project.
 
+## Tests
 
+### `loader_test.go`
+
+Provides a test for testing the variable loading in `variable_loader.go`.
+
+### `communicator.go`
+
+Provides tests for testing `communicator.go`.
 
