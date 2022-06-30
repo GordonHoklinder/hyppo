@@ -30,7 +30,7 @@ func possible_values (variables []variable) []int {
 		} else if vari.lower_boundary == vari.upper_boundary {
 			output[i] = 1
 		} else if vari.format == float_format {
-			output[i] = 0
+			output[i] = variables[i].splits
 		} else {
 			max_splits := int(variables[i].upper_boundary - variables[i].lower_boundary + 1)
 			if variables[i].splits != 0 {

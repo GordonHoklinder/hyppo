@@ -126,14 +126,8 @@ func load_variables(path string) ([]variable, error) {
 					def = default_value.(float64)
 				}
 				result = append(result, float_variable(name, lower_boundary, upper_boundary, splits, has_default_value, def))
-
 			}
-			
-
 		}
-		 
 	}
-
-
 	return result, nil
 }
