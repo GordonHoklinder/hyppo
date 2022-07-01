@@ -11,6 +11,13 @@ func assert (t *testing.T, statement bool, message string) {
 	}
 }
 
+func assert_slices_equal(t *testing.T, a, b []int) {
+	assert(t, len(a) == len(b), "Arrays have different length.")
+	for i, a_i := range a {
+		assert(t, a_i == b[i], "The arrays differ.")
+	}
+}
+
 func Test_load_variables(t *testing.T) {
 	variables, _ := load_variables("../variables.yaml")
 	assert(t, len(variables) == 3, "Variables do not have correct length.")

@@ -43,3 +43,29 @@ func Test_possible_values(t *testing.T) {
 	assert(t, values[6] == 6, "Incorrect splits for int variables with splits.")
 	assert(t, values[7] == 9, "Incorrect splits for int variables with splits and limited range.")
 }
+
+func Test_runs_divide(t *testing.T) {
+	assert(t, runs_divide(7, 3) == 2, "Incorrect division in runs_divide.")
+}
+
+func Test_runs_subtract(t *testing.T) {
+	assert(t, runs_subtract(7, 3) == 4, "Incorrect subtraction in runs_subtract.")
+}
+
+func Test_product(t *testing.T) {
+	assert(t, product(2, 3) == 6, "Incorrect product is not correct.")
+	assert(t, product(2, 0) == 0, "Product should be zero.")
+}
+
+func Test_sum_no_negative(t *testing.T) {
+	assert(t, sum_no_negative(3, 5) == 8, "Incorrect sum.")
+	assert(t, sum_no_negative(0, 5) == 0, "Zero at first element should imply zero result.")
+	assert(t, sum_no_negative(3, 0) == 0, "Zero at second element should imply zero result.")
+}
+
+func Test_compute_prefix(t *testing.T) {
+	prefix_sums := compute_prefix([]int{5, 3, 0, 7}, sum_no_negative)
+	assert_slices_equal(t, prefix_sums, []int{5, 8, 0, 0})
+	prefix_products := compute_prefix([]int{1, 5, 3, 0, 7}, product)
+	assert_slices_equal(t, prefix_products, []int{1, 5, 15, 0, 0})
+}

@@ -92,9 +92,9 @@ func sum_no_negative(a, b int) int {
 	return a + b
 }
 
-func compute_prefix (values []int, function prefix_function, initial int) []int {
+func compute_prefix (values []int, function prefix_function) []int {
 	output := make([]int, len(values))
-	output[0] = initial
+	output[0] = values[0]
 	for i := 1; i < len(values); i++ {
 		output[i] = function(output[i-1], values[i])
 	}
