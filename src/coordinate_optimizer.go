@@ -6,8 +6,8 @@ type coordinate_optimizer struct {
 }
 
 func (this coordinate_optimizer) find_optimal_hyperparameters(variables []variable) {
-	possibilities := compute_prefix(possible_values(variables), sum_no_negative)
-	splits := find_splits(variables, possibilities, this.runs, 0, runs_subtract)
+	possibilities := compute_prefix(possible_values(variables, 0), sum_no_negative)
+	splits := find_splits(variables, possibilities, this.runs, get_addition_config())
 	best := get_default_individual(variables)
 	best = best.evaluate_individual(variables, this.script_communicator)
 	for i := len(splits) - 1; i >= 0; i-- {

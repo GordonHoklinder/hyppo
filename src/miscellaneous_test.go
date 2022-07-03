@@ -22,7 +22,7 @@ func Test_step_size(t *testing.T) {
 
 func Test_possible_values(t *testing.T) {
 	variables := []variable{
-		string_variable("", []string{"prvni", "druhy", "treti"}, false, ""),
+		string_variable("", []string{"first", "second", "third"}, false, ""),
 		float_variable("", 0.0, 0.0, 0, false, 0.0),
 		float_variable("", 0.0, 1.0, 7, false, 0.0),
 		float_variable("", 0.0, 8.0, 2, false, 0.0),
@@ -31,11 +31,10 @@ func Test_possible_values(t *testing.T) {
 		int_variable("", 0.0, 8.0, 6, false, 0.0),
 		int_variable("", 0.0, 8.0, 11, false, 0.0),
 	}
-	values := possible_values(variables)
+	values := possible_values(variables, 0)
 	assert(t, len(values) == 8, "values have inccorect length.")
 	assert(t, values[0] == 3, "Incorrect splits for string variables.")
 	assert(t, values[1] == 1, "Incorrect splits for float variables with one option.")
-	t.Logf("%d", values[2])
 	assert(t, values[2] == 7, "Incorrect splits for float variables with splits.")
 	assert(t, values[3] == 2, "Incorrect splits for float variables with splits.")
 	assert(t, values[4] == 0, "Incorrect splits for float variables without splits.")
@@ -68,4 +67,31 @@ func Test_compute_prefix(t *testing.T) {
 	assert_slices_equal(t, prefix_sums, []int{5, 8, 0, 0})
 	prefix_products := compute_prefix([]int{1, 5, 3, 0, 7}, product)
 	assert_slices_equal(t, prefix_products, []int{1, 5, 15, 0, 0})
+}
+
+func Test_find_splits(t *testing.T) {
+	splits := find_splits(
+		[]variable{
+			string_variable("", []string{"first", "second"}, false, ""),
+			int_variable("", 0.0, 3.0, 5, false, 0.0),
+			float_variable("", 0.0, 3.0, 0, false, 0.0),
+			float_variable("", 0.0, 3.0, 0, false, 0.0),
+			float_variable("", 0.0, 3.0, 1, false, 0.0),
+		},
+		[]int{2, 8, 0, 0, 0},
+		256,
+		get_multiplication_config(),
+	)
+	assert_slices_equal(t, splits, []int{2, 4, 8, 4, 1})
+	splits = find_splits(
+		[]variable{
+			string_variable("", []string{"first", "second"}, false, ""),
+			int_variable("", 0.0, 50.0, 0, false, 0.0),
+			float_variable("", 0.0, 3.0, 0, false, 0.0),
+		},
+		[]int{2, 53, 0},
+		51,
+		get_addition_config(),
+	)
+	assert_slices_equal(t, splits, []int{2, 32, 17})
 }

@@ -22,7 +22,7 @@ func step_size(vari variable, splits int) float64 {
 	return (vari.upper_boundary - vari.lower_boundary) / float64(splits - 1)
 }
 
-func possible_values (variables []variable) []int {
+func possible_values (variables []variable, splits_cap int) []int {
 	output := make([]int, len(variables))
 	for i, vari := range variables {
 		if vari.format == string_format {
@@ -35,14 +35,24 @@ func possible_values (variables []variable) []int {
 			max_splits := int(variables[i].upper_boundary - variables[i].lower_boundary + 1)
 			if variables[i].splits != 0 {
 				max_splits = min(max_splits, variables[i].splits)
+			} else if splits_cap != 0 {
+				max_splits = min(max_splits, splits_cap)
 			}
 			output[i] = max_splits
+		}
+		if output[i] == 0 {
+			output[i] = splits_cap
 		}
 	}
 	return output
 }
 
 type runs_update_function func (int, int) int
+type expected_compute_function func (int, int) int
+type splits_config struct {
+	update_function runs_update_function
+	compute_function expected_compute_function
+}
 
 func runs_divide (runs, split int) int {
 	return runs / split
@@ -52,7 +62,23 @@ func runs_subtract (runs, split int) int {
 	return runs - split
 }
 
-func find_splits (variables []variable, possibilities []int, runs int, splits_cap int, update_function runs_update_function) []int {
+func expected_root (runs, remaining int) int {
+	return int(math.Pow(float64(runs), 1.0 / float64(remaining)))
+}
+
+func expected_division(runs, remaining int) int {
+	return runs / remaining
+}
+
+func get_multiplication_config () splits_config  {
+	return splits_config{runs_divide, expected_root}
+}	
+
+func get_addition_config () splits_config  {
+	return splits_config{runs_subtract, expected_division}
+}	
+
+func find_splits (variables []variable, possibilities []int, runs int, config splits_config) []int {
 	splits := make([]int, len(variables))
 	for i := len(variables) - 1; i >= 0; i-- {
 		max_splits := int(variables[i].upper_boundary - variables[i].lower_boundary + 1)
@@ -63,18 +89,15 @@ func find_splits (variables []variable, possibilities []int, runs int, splits_ca
 		} else if variables[i].lower_boundary == variables[i].upper_boundary {
 			splits[i] = 1
 		} else {
-			splits[i] = max(int(math.Pow(float64(runs), 1.0 / float64(i + 1))), 2)
-			if possibilities[i] != 0 {
-				splits[i] = max(splits[i], runs / possibilities[i])
-			}
-			if splits_cap != 0 && variables[i].splits == 0 {
-				splits[i] = min(splits[i], splits_cap)
+			splits[i] = max(config.compute_function(runs, i + 1), 2)
+			if i > 0 && possibilities[i-1] != 0 {
+				splits[i] = max(splits[i], config.update_function(runs, possibilities[i-1]))
 			}
 			if variables[i].format == int_format {
 				splits[i] = min(splits[i], max_splits)
 			}
 		}
-		runs = update_function(runs, splits[i])
+		runs = config.update_function(runs, splits[i])
 	}
 	return splits
 }

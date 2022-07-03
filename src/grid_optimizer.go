@@ -28,8 +28,8 @@ type grid_optimizer struct {
 
 
 func grid_iteration(variables []variable, script_communicator communicator, runs int, splits_cap int) []variable {
-	possibilities := compute_prefix(possible_values(variables), product)
-	splits := find_splits(variables, possibilities, runs, splits_cap, runs_divide)
+	possibilities := compute_prefix(possible_values(variables, splits_cap), product)
+	splits := find_splits(variables, possibilities, runs, get_multiplication_config())
 	configurations_ran := make([]int, len(variables))
 	changed_index := len(variables) - 1
 	var best_variables []string
