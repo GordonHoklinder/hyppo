@@ -72,6 +72,14 @@ func (this individual) to_string_slice (variables []variable) []string {
 	return output
 }
 
+func (this evaluated_individual) make_copy() evaluated_individual {
+	output := evaluated_individual{this.score, make(individual, len(this.data))}
+	for i, x := range this.data {
+		output.data[i] = x
+	}
+	return output
+}
+
 func (this evaluated_individual) evaluate_individual (variables []variable, script_communicator communicator) evaluated_individual {
 	this.score = script_communicator.run_arguments(variables, this.data.to_string_slice(variables))
 	return this

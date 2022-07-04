@@ -12,7 +12,7 @@ func (this coordinate_optimizer) find_optimal_hyperparameters(variables []variab
 	best = best.evaluate_individual(variables, this.script_communicator)
 	for i := len(splits) - 1; i >= 0; i-- {
 		for j := 0; j < splits[i]; j++ {
-			current := best
+			current := best.make_copy()
 			if variables[i].format == string_format {
 				current.data[i] = property_from_string(variables[i].options[j])
 			} else if splits[i] != 1 {
@@ -25,7 +25,7 @@ func (this coordinate_optimizer) find_optimal_hyperparameters(variables []variab
 			}
 			current = current.evaluate_individual(variables, this.script_communicator)
 			if (current.score > best.score) {
-				best = current
+				best = current.make_copy()
 			}
 		}
 	}
