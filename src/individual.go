@@ -30,6 +30,7 @@ type evaluated_individual struct {
 	data individual
 }
 
+// Generate an uniformly random individual.
 func get_random_individual (variables []variable) evaluated_individual {
 	newborn := make(individual, len(variables))
 	for i, vari := range variables {
@@ -48,6 +49,8 @@ func get_random_individual (variables []variable) evaluated_individual {
 	return evaluated_individual{0.0, newborn}
 }
 
+// Generate a individual containing default values in variables where provided
+// or random values if not provided.
 func get_default_individual (variables []variable) evaluated_individual {
 	newborn := get_random_individual(variables).data
 	for i, vari := range variables {
@@ -80,6 +83,7 @@ func (this evaluated_individual) make_copy() evaluated_individual {
 	return output
 }
 
+// Assign a score to the individual based on the result of the underlaying script.
 func (this evaluated_individual) evaluate_individual (variables []variable, script_communicator communicator) evaluated_individual {
 	this.score = script_communicator.run_arguments(variables, this.data.to_string_slice(variables))
 	return this

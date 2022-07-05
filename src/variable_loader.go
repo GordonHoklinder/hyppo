@@ -64,6 +64,7 @@ func string_variable (name string, options []string, has_default_value bool, def
 	}
 }
 
+// Load variables from the given yaml file.
 func load_variables(path string) ([]variable, error) {
 	result := make([]variable, 0);
 

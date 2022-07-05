@@ -18,10 +18,12 @@ func max(a int, b int) int {
 	return b
 }
 
+// Find the size of the step for a given variable with given number of splits.
 func step_size(vari variable, splits int) float64 {
 	return (vari.upper_boundary - vari.lower_boundary) / float64(splits - 1)
 }
 
+// Compute the maximum number of splits for each variable.
 func possible_values (variables []variable, splits_cap int) []int {
 	output := make([]int, len(variables))
 	for i, vari := range variables {
@@ -78,6 +80,9 @@ func get_addition_config () splits_config  {
 	return splits_config{runs_subtract, expected_division}
 }	
 
+// Find the number of splits for each variable in a way that the total number
+// of calls as described by `config` is about `runs` and the number of splits
+// does not exceed the maximum number of splits in each variable.
 func find_splits (variables []variable, possibilities []int, runs int, config splits_config) []int {
 	splits := make([]int, len(variables))
 	for i := len(variables) - 1; i >= 0; i-- {
@@ -115,6 +120,7 @@ func sum_no_negative(a, b int) int {
 	return a + b
 }
 
+// Compute the generalized prefix sum array where summation is replaced by `prefix_function`.
 func compute_prefix (values []int, function prefix_function) []int {
 	output := make([]int, len(values))
 	output[0] = values[0]

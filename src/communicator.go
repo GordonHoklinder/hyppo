@@ -28,6 +28,7 @@ func new_communicator (script string, arguments string, log_path string, pass_na
 	return communicator{script, arguments, log_path, pass_names}
 }
 
+// Return a path where to store the logs.
 func get_log_path (log_path, script string) string {
 	if log_path == "" {
 		return script + ".hyppo-log"
@@ -41,7 +42,7 @@ type line_with_score struct {
 	line string
 }
 
-
+// Append a line with score and flags to the log file.
 func (this communicator) log_score (score float64, flags string) {
 	file, _ := os.OpenFile(this.log_path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) 
 	defer file.Close()
@@ -49,6 +50,7 @@ func (this communicator) log_score (score float64, flags string) {
 	file.WriteString(line)
 }
 
+// Read the log file.
 func (this communicator) read_log() []line_with_score {
 	file, _ := os.OpenFile(this.log_path, os.O_RDWR, 0755)
 	defer file.Close()
@@ -62,6 +64,7 @@ func (this communicator) read_log() []line_with_score {
 	return lines
 }
 
+// Sort the log file by score descendingly.
 func (this communicator) sort_log () {
 	lines := this.read_log()
 	sort.Slice(lines, func(i, j int) bool {
@@ -75,11 +78,13 @@ func (this communicator) sort_log () {
 	}
 }
 
+// Sort the log file by score descendingly and return the best score.
 func (this communicator) global_best_score () float64 {
 	this.sort_log()
 	return this.read_log()[0].score
 }
 
+// Format the argument to be passed to the underlaying script.
 func (this communicator) format_parameter(argument variable, value string) string {
 	if this.pass_names {
 		return "--" + argument.name + "=" + value
@@ -96,6 +101,7 @@ func (this communicator) format_flags(arguments []variable, arguments_values []s
 	return flags
 }
 
+// Pass the given values to the script and return the last line of the srcipt's output.
 func (this communicator) run_arguments (arguments []variable, arguments_values []string) float64 {
 	flags := this.format_flags(arguments, arguments_values)
 	var command *exec.Cmd
