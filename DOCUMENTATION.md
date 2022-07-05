@@ -91,11 +91,17 @@ Provides additional miscellaneous functions which are used all over the project.
 
 ## Tests
 
+### `test.go`
+
+Provides helper functions to other tests.
+
 ### `loader_test.go`
 
 Provides a test for testing the variable loading in `variable_loader.go`.
 
-### `communicator.go`
+### `communicator_test.go`
 
 Provides tests for testing `communicator.go`.
 
+### `miscellaneous_test.go`
+Tests the functions in `miscellaneous.go`.
