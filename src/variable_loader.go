@@ -64,6 +64,7 @@ func string_variable (name string, options []string, has_default_value bool, def
 	}
 }
 
+// Load variables from the given yaml file.
 func load_variables(path string) ([]variable, error) {
 	result := make([]variable, 0);
 
@@ -126,14 +127,8 @@ func load_variables(path string) ([]variable, error) {
 					def = default_value.(float64)
 				}
 				result = append(result, float_variable(name, lower_boundary, upper_boundary, splits, has_default_value, def))
-
 			}
-			
-
 		}
-		 
 	}
-
-
 	return result, nil
 }

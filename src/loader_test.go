@@ -4,13 +4,6 @@ import (
 	"testing"
 )
 
-func assert (t *testing.T, statement bool, message string) {
-	if !statement {
-		t.Log(message)
-		t.Fail()
-	}
-}
-
 func Test_load_variables(t *testing.T) {
 	variables, _ := load_variables("../variables.yaml")
 	assert(t, len(variables) == 3, "Variables do not have correct length.")

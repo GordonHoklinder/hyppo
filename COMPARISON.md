@@ -13,8 +13,8 @@ The results were following:
 - Random search ........... 102431
 - Genetic algorithm ....... 102117
 - Simulated annealing ..... 101330
+- Coordinate search ....... 100842
 - Grid search .............  96242
-- Coordinate search .......  95832
 
 # One variable
 The same input, but only one variable was optimized. It was ran with `runs=730`.
@@ -33,7 +33,7 @@ The second input was a bit larger and the optimizers were run with `runs=80`. Th
 - Grid search ............. 5610129
 - Genetic algorithm ....... 5493290
 - Random search ........... 5342324
-- Coordinate search ....... 5264229
+- Coordinate search ....... 5277355
 - Simulated annealing ..... 5260585
 
 # Conclusion
@@ -44,4 +44,4 @@ Note again that this comparison is by no means comperhensive - the algorithms we
 - Genetic algorithm: Seems to generally work well. It's advantage over random search is that it's able to exploit local optima better - this results in less balanced score, sometimes scoring poorly, but the maximum of the 3 runs was always higher than in random search.
 - Simulated annealing: Appers to be very bad in situation where there is a vast parameter space and only a few runs. In the situation with only a small space and many runs it was superior.
 - Grid search: Not great generally, if there are only a few runs, can benefit from trying the extreme values for the parameters.
-- Iterated grid search & coordinate search: Seem to be bad.
+- Iterated grid search & coordinate search: Do not seem to be great. Maybe under some specific circumstances they might be useful.

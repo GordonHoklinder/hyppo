@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	// Read the flags.
 	var script, optimizer_name, variables_path, logs_path, arguments string
 	var runs, iterations, mutants, hybrids int
 	var magic, temperature float64
@@ -24,13 +25,13 @@ func main() {
 	flag.Float64Var(&temperature, "temperature", 1.0, "The temperature.")
 	flag.BoolVar(&pass_variable_names, "pass_names", true, "Whether the variables to the script are passed with names.")
 	flag.Parse();
-	
-
+	// Load the variables from the yaml file.
 	variables, err := load_variables(variables_path)
 	if err != nil {
 		log.Fatal(err)
 	}
 	script_communicator := new_communicator(script, arguments, logs_path, pass_variable_names)
+	// Select appropriate optimizer.
 	var used_optimizer optimizer
 	switch optimizer_name {
 	case "random":
@@ -48,7 +49,9 @@ func main() {
 	default:
 		log.Fatalf("%s is not a supported optimizer.\n", optimizer_name)
 	}
+	// Run the optimizer.
 	used_optimizer.find_optimal_hyperparameters(variables)
+	// Print the results from the log file.
 	fmt.Printf("Global best score:\n%f\n", script_communicator.global_best_score())
 	fmt.Printf("Current best score:\n%f\n", current_best_score)
 }

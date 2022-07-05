@@ -6,13 +6,13 @@ type coordinate_optimizer struct {
 }
 
 func (this coordinate_optimizer) find_optimal_hyperparameters(variables []variable) {
-	possibilities := compute_prefix(possible_values(variables), sum_no_negative, 0)
-	splits := find_splits(variables, possibilities, this.runs, 0, runs_subtract)
+	possibilities := compute_prefix(possible_values(variables, 0), sum_no_negative)
+	splits := find_splits(variables, possibilities, this.runs, get_addition_config())
 	best := get_default_individual(variables)
 	best = best.evaluate_individual(variables, this.script_communicator)
 	for i := len(splits) - 1; i >= 0; i-- {
 		for j := 0; j < splits[i]; j++ {
-			current := best
+			current := best.make_copy()
 			if variables[i].format == string_format {
 				current.data[i] = property_from_string(variables[i].options[j])
 			} else if splits[i] != 1 {
@@ -25,7 +25,7 @@ func (this coordinate_optimizer) find_optimal_hyperparameters(variables []variab
 			}
 			current = current.evaluate_individual(variables, this.script_communicator)
 			if (current.score > best.score) {
-				best = current
+				best = current.make_copy()
 			}
 		}
 	}
